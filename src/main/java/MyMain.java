@@ -7,8 +7,13 @@ public class MyMain {
     //      int x = "apple".compareTo("banana"); // x is negative
     //      int y = "banana".compareTo("apple"); // y is positive
     public static String findLastWord(String[] arr) {
-        // YOUR CODE HERE
-        return "";
+        String lastWord = "a";
+        for (String word: arr){
+            if (word.compareTo(lastWord)>=0){
+                lastWord = word;
+            }
+        }
+        return lastWord;
     }
 
     // Given a 2D array, return an 1D array of the last word
@@ -16,8 +21,11 @@ public class MyMain {
     // You can assume that the matrix will not be empty
     // Hint: use the previous method to help yourself!
     public static String[] findLastWord2D(String[][] mat) {
-        // YOUR CODE HERE
-        return null;
+        String[] words = new String[mat.length];
+        for (int i = 0; i < mat.length ; i++) {
+            words[i] = findLastWord(mat[i]);
+        }
+        return words;
     }
 
     // Given a 2D array and some column index col
@@ -30,8 +38,13 @@ public class MyMain {
     // Hint: remember how the indexOf() method works?
     // alternatively, consider the contains() method
     public static int appleCounter(String[][] mat, int col) {
-        // YOUR CODE HERE
-        return -1;
+        int apples = 0;
+        for (int row = 0; row < mat.length; row++) {
+            if (mat[row][col].contains("apple")){
+                apples++;
+            }
+        }
+        return apples;
     }
 
     // Given a 2D array, return the column number corresponding
@@ -41,8 +54,16 @@ public class MyMain {
     // Hint: use your previous method!
     // Hint 2: you might need to loop through the columns!
     public static int findMostAppleColumn(String[][] mat) {
-        // YOUR CODE HERE
-        return -1;
+        int mostApples = 0;
+        int mostAppleColumn = -1;
+        for (int i = 0; i < mat[0].length; i++) {
+            int apples = appleCounter(mat,i);
+            if (apples>=mostApples){
+                mostAppleColumn = i;
+                mostApples = apples;
+            }
+        }
+        return mostAppleColumn;
     }
 
 
@@ -70,8 +91,17 @@ public class MyMain {
     //       from top to bottom
 
     public static int[][] pascal(int height) {
-        // YOUR CODE HERE
-        return null;
+        int[][] pascal = new int[height][height];
+        for (int row = 0; row < pascal.length; row++) {
+            pascal[row][0] = 1;
+            pascal[row][row]=1;
+            if (row>1){
+                for (int col = 1; col < row ; col++) {
+                    pascal[row][col] = pascal[row-1][col]+pascal[row-1][col-1];
+                }
+            }
+        }
+        return pascal;
     }
 
 
@@ -107,8 +137,51 @@ public class MyMain {
     // * do you see any pattern for the row and col indexes for a diagonal?
     // * can you use a for loop that goes through that pattern?
     public static boolean isMagic(int[][] mat) {
-        // YOUR CODE HERE
-        return false;
+        int x = sumRow(mat[0]);
+        return (checkRows(mat,x)&&checkCols(mat,x)&&checkDiagonals(mat,x));
+    }
+    public static int sumRow(int[] row){
+        int sum = 0;
+        for (int x: row){
+            sum+=x;
+        }
+        return sum;
+    }
+    public static int sumCol(int[][]mat, int col){
+        int sum = 0;
+        for (int[] row: mat){
+            sum+= row[col];
+        }
+        return sum;
+    }
+    public static int sumDiagonal(int[][]mat, int shift){
+        int sum = 0;
+        for (int row = 0; row < mat.length; row++) {
+            sum+=mat[row][Math.abs(shift-row)];
+        }
+        return sum;
+    }
+    public static boolean checkRows(int[][]mat, int x){
+        for (int i = 1; i < mat.length; i++) {
+            if (sumRow(mat[i])!=x){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean checkCols(int[][]mat, int x){
+        for (int i = 0; i < mat[0].length; i++) {
+            if (sumCol(mat,i)!=x) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean checkDiagonals(int[][]mat, int x){
+        if (sumDiagonal(mat,0)!=x||sumDiagonal(mat,mat[0].length-1)!=x){
+            return false;
+        }
+        return true;
     }
 
 
